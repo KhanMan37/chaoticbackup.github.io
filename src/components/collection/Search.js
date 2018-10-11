@@ -4,11 +4,13 @@ import {observer, inject} from 'mobx-react';
 import loki from 'lokijs';
 import Collapsible from 'react-collapsible';
 import API from '../SpreadsheetData';
+import {debounce} from 'debounce';
 
 @inject((stores, props, context) => props) @observer
 export default class SearchCollection extends React.Component {
   @observable loaded = false;
   @observable input;
+  @observable menu_fixed = false;
   list = ["sets", "types", "rarity", "tribes", "elements", "mull", "gender"];
 
   constructor(props) {
@@ -24,6 +26,30 @@ export default class SearchCollection extends React.Component {
     this.cleanInput();
     this.parseQuery();
   }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  /* https://stackoverflow.com/questions/29725828/update-style-of-a-component-onscroll-in-react-js */
+  handleScroll = debounce((event) => {
+    if (this.menu_fixed !== null) {
+      if (window.scrollY >= 220 &&
+        !this.menu_fixed.classList.contains("fixed")
+      ) {
+        this.menu_fixed.classList.add("fixed");
+        // this.menu_fixed.className = "fixed";
+      }
+      else if (this.menu_fixed.classList.contains("fixed")) {
+        // this.menu_fixed.className = "";
+        this.menu_fixed.classList.remove("fixed");
+      }
+    }
+  }, 250)
 
   cleanInput = () => {
     let input = {
@@ -191,7 +217,7 @@ export default class SearchCollection extends React.Component {
 
     return (
       <div className="SearchForm">
-        <form onSubmit={this.search}>
+        <form ref={(ref) => this.menu_fixed = ref} onSubmit={this.search}>
           <br />
           <label>Name&nbsp;<input type="text" name="name" value={this.input.name} onChange={this.handleChange} /></label>
           <br />

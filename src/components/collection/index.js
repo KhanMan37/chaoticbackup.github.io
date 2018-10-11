@@ -5,7 +5,7 @@ import {observable} from "mobx";
 import {observer, inject} from 'mobx-react';
 import CardList from './List';
 import SearchForm from './Search';
-import '../../scss/collection.scss'
+import '../../scss/collection.scss';
 
 @inject((stores, props, context) => props) @observer
 export default class Home extends React.Component {

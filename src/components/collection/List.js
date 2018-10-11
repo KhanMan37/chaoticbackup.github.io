@@ -23,7 +23,7 @@ export default class CardList extends React.Component {
       <div style={{textAlign: 'left'}}>{cards[0].text}</div>
       );
     }
-    return cards.map((card, i) => {
+    else return cards.map((card, i) => {
       switch (card.gsx$type) {
       case "Attacks":
         return (<Attack card={card} key={i} ext={this.props.ext} setImage={this.setImage.bind(this)}/>);
